@@ -337,7 +337,7 @@ hr {
   position: absolute;
   top: 0;
   right: 10px;
-  font-size: 36px;
+  font-size: 28px;
   text-decoration: none;
 }
 
@@ -426,5 +426,14 @@ hr {
 
   .side-column.show {
     width: 100%;
+  }
+
+  .item {
+    height: 1rem;
+  }
+  .item .pos {
+    width: 1rem;
+    height: 1rem;
+    font-size: 12px;
   }
 }
