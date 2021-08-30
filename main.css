@@ -242,8 +242,7 @@ hr {
   display: flex;
 }
 
-.restart-button,
-.ldb-button {
+.setting-button {
   background-repeat: no-repeat;
   background-position: center;
   background-color: #8f7a66;
@@ -257,6 +256,7 @@ hr {
 
 .restart-button {
   background-image: url("./assets/play.png");
+  margin-right: 5px;
 }
 
 .ldb-button {
