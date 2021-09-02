@@ -240,6 +240,8 @@ hr {
 
 .game-btns {
   display: flex;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .setting-button {
@@ -252,11 +254,22 @@ hr {
   height: 40px;
   cursor: pointer;
   flex-shrink: 0;
+  margin-right: 5px;
+}
+
+.setting-button.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sound-button {
+  background-image: url("./assets/sound.png");
 }
 
 .restart-button {
   background-image: url("./assets/play.png");
-  margin-right: 5px;
+  margin-right: 0;
 }
 
 .ldb-button {
@@ -267,7 +280,7 @@ hr {
 .leaderboard-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   flex: 1;
   margin-top: 20px;
 }
@@ -275,7 +288,7 @@ hr {
 .leaderboard-container .item {
   display: flex;
   align-items: center;
-  height: 1.2rem;
+  height: 1.5rem;
   border-radius: 2rem;
   box-shadow: 0 0 4rem 0 rgb(0 0 0 / 10%), 0 1rem 2rem -1rem rgb(0 0 0 / 30%);
 }
@@ -345,7 +358,7 @@ hr {
   display: block;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   html,
   body {
     font-size: 15px;
@@ -357,7 +370,7 @@ hr {
   }
 
   h1.title {
-    font-size: 27px;
+    font-size: 18px;
     margin-top: 15px;
   }
 
@@ -371,6 +384,10 @@ hr {
 
   .game-container {
     margin: 0 auto;
+  }
+
+  .game-intro {
+    display: none;
   }
 
   .number-container,
