@@ -1,0 +1,31 @@
+{
+  "name": "5numbers",
+  "version": "1.0.0",
+  "description": "Find the number from 1 to 100!",
+  "private": "true",
+  "homepage": "https://duthaho.github.io/5number/",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.2.0",
+    "dotenv-webpack": "^7.0.3",
+    "gh-pages": "^3.2.3",
+    "style-loader": "^3.2.1",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "dependencies": {
+    "devtools-detector": "^2.0.12",
+    "firebase": "^9.0.0",
+    "hotkeys-js": "^3.10.0",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2"
+  }
+}
