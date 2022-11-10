@@ -112,3 +112,12 @@ and limitations under the License.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**! 
+ * hotkeys-js v3.10.0 
+ * A simple micro-library for defining and dispatching keyboard shortcuts. It has no dependencies. 
+ * 
+ * Copyright (c) 2022 kenny wong <wowohoo@qq.com> 
+ * http://jaywcjlove.github.io/hotkeys 
+ * Licensed under the MIT license 
+ */
