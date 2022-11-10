@@ -65,12 +65,42 @@
     <div class="leaderboard-container"></div>
   </div>
 
-  <div id="fb-root"></div>
+  <div id="fb-root" style="display: none;"></div>
   <!-- <script async defer crossorigin="anonymous"
     src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v11.0&appId=556230145821653&autoLogAppEvents=1"
     nonce="dVBjJ3Rw"></script> -->
   <script src="//cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
   <script src="main.js"></script>
+  <script>
+    !function() {
+      function detectDevTool(allow) {
+        if(isNaN(+allow)) allow = 100;
+        var start = +new Date();
+        debugger;
+        var end = +new Date();
+        if(isNaN(start) || isNaN(end) || end - start > allow) {
+          document.write('Welcome Hecker');
+        }
+      }
+      if(window.attachEvent) {
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+          detectDevTool();
+          window.attachEvent('onresize', detectDevTool);
+          window.attachEvent('onmousemove', detectDevTool);
+          window.attachEvent('onfocus', detectDevTool);
+          window.attachEvent('onblur', detectDevTool);
+        } else {
+          setTimeout(argument.callee, 0);
+        }
+      } else {
+        window.addEventListener('load', detectDevTool);
+        window.addEventListener('resize', detectDevTool);
+        window.addEventListener('mousemove', detectDevTool);
+        window.addEventListener('focus', detectDevTool);
+        window.addEventListener('blur', detectDevTool);
+      }
+    }();
+  </script>
 </body>
 
 </html>
