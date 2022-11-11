@@ -187,21 +187,21 @@ hr {
   width: 100%;
 }
 
-.grid-row {
+.grid-r {
   margin-bottom: 5px;
   display: flex;
   justify-content: center;
 }
-.grid-row:last-child {
+.grid-r:last-child {
   margin-bottom: 0;
 }
-.grid-row:after {
+.grid-r:after {
   content: "";
   display: block;
   clear: both;
 }
 
-.grid-cell {
+.grid-c {
   width: 60px;
   height: 60px;
   margin-right: 5px;
@@ -215,11 +215,14 @@ hr {
   line-height: 60px;
   font-size: 60px;
 }
-.grid-cell:last-child {
+.grid-c:last-child {
   margin-right: 0;
 }
-.grid-cell.success {
+.grid-c.success {
   background-color: lightseagreen;
+}
+.gird-c.hidden {
+  display: none !important;
 }
 
 .above-game {
@@ -418,16 +421,16 @@ hr {
     box-sizing: border-box;
   }
 
-  .grid-row:last-child {
+  .grid-r:last-child {
     margin-bottom: 0;
   }
-  .grid-row:after {
+  .grid-r:after {
     content: "";
     display: block;
     clear: both;
   }
 
-  .grid-cell {
+  .grid-c {
     width: 30px;
     height: 30px;
     float: left;
@@ -437,8 +440,11 @@ hr {
     background-position: center;
     background-size: 100%;
   }
-  .grid-cell:last-child {
+  .grid-c:last-child {
     margin-right: 0;
+  }
+  .grid-c.hidden {
+    display: none !important;
   }
 
   .side-column.show {
