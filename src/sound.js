@@ -23,7 +23,7 @@ let correctSound;
 let winSound;
 let muted = false;
 
-export const initSound = () => {
+export const onInitSound = () => {
   correctSound = new Audio("./assets/correct.mp3");
   winSound = new Audio("./assets/win.mp3");
   bgSound = new Audio();
@@ -37,18 +37,16 @@ export const initSound = () => {
   );
 };
 
-export const toggleSound = (e, inGame) => {
+export const onToggleSound = (inGame) => {
   muted = !muted;
   if (muted) {
     bgSound.pause();
   } else {
-    inGame && playBgSound();
+    inGame && onPlayBgSound();
   }
-  const path = muted ? "./assets/mute.png" : "./assets/sound.png";
-  e.target.style["background-image"] = `url(${path})`;
 };
 
-export const playBgSound = () => {
+export const onPlayBgSound = () => {
   if (!muted) {
     bgSound.pause();
     bgSound.src = `./assets/${bgSounds[_random(bgSounds.length - 1)]}`;
@@ -56,15 +54,15 @@ export const playBgSound = () => {
   }
 };
 
-export const pauseBgSound = () => bgSound.pause();
+export const onPauseBgSound = () => bgSound.pause();
 
-export const playGameSound = () => {
+export const onPlayGameSound = () => {
   correctSound.pause();
   correctSound.currentTime = 0;
   correctSound.play();
 };
 
-export const playWinSound = () => {
+export const onPlayWinSound = () => {
   winSound.pause();
   winSound.currentTime = 0;
   winSound.play();

@@ -6,7 +6,7 @@
   "homepage": "https://duthaho.github.io/5number/",
   "scripts": {
     "build": "webpack",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --mode=development",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
