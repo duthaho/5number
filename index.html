@@ -1,95 +1,138 @@
 <!DOCTYPE html>
-<html lang="en" class="js-focus-visible" data-js-focus-visible="">
+<!-- saved from url=(0041)https://phoenix-battleship.herokuapp.com/ -->
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>5number</title>
+    <meta
+      name="description"
+      content="Join the game and find the number from 1 to 100!"
+    />
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta
+      name="viewport"
+      content="width=device-width,target-densitydpi=160dpi,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:title" content="5number" />
+    <meta property="og:site_name" content="5number" />
+    <meta
+      property="og:image"
+      content="https://duthaho.github.io/5number/assets/site.png"
+    />
+    <meta
+      property="og:description"
+      content="Join the game and find the number from 1 to 100! Careful: this game is extremely addictive!"
+    />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5998727104603081"
+      crossorigin="anonymous"
+    ></script>
+    <meta name="author" content="duthaho - http://duthaho.com" />
+    <link rel="stylesheet" href="font-awesome.min.css" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>5number</title>
-  <meta name="description" content="Join the game and find the number from 1 to 100!" />
-  <link rel="shortcut icon" href="./favicon.ico" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <meta name="HandheldFriendly" content="True" />
-  <meta name="MobileOptimized" content="320" />
-  <meta name="viewport"
-    content="width=device-width,target-densitydpi=160dpi,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta property="og:title" content="5number" />
-  <meta property="og:site_name" content="5number" />
-  <meta property="og:image" content="https://duthaho.github.io/5number/assets/site.png" />
-  <meta property="og:description"
-    content="Join the game and find the number from 1 to 100! Careful: this game is extremely addictive!" />
-  <link rel="stylesheet" href="./main.css" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5998727104603081"
-    crossorigin="anonymous"></script>
-</head>
-
-<body>
-  <div id="pulse-wrapper">
-    <div id="pulse">
-      <span></span>
-      <span></span>
-    </div>
-  </div>
-  <div class="container">
-    <div class="heading">
-      <h1 class="title">5number</h1>
-      <div class="scores-container">
-        <div class="number-container">1</div>
-        <div class="timer-container">00:00</div>
+  <body>
+    <div id="pulse_wrapper">
+      <div id="pulse">
+        <span></span>
+        <span></span>
       </div>
     </div>
-    <div class="above-game">
-      <p class="game-intro">
-        <a href="https://duthaho.github.io" target="_blank" class="how-to-play-link">build by duthaho →</a>
-      </p>
-      <div class="game-btns">
-        <!-- <div class="setting-button center mode-button">Easy</div> -->
-        <div class="setting-button sound-button"></div>
-        <div class="setting-button ldb-button"></div>
-        <div class="setting-button restart-button"></div>
+    <div id="main_container">
+      <div id="home_index">
+        <header>
+          <h1>
+            Hello,
+            <br />welcome to the game!
+          </h1>
+          <p>
+            find
+            <a href="#">the number</a> from <a href="#">1</a> to
+            <a href="#">100</a>
+          </p>
+        </header>
+        <section>
+          <ul class="current-games">
+            <div>
+              <li>
+                <input placeholder="your name" id="single_mode_name" /><button
+                  id="single_mode_btn"
+                  class="small"
+                >
+                  play
+                </button>
+              </li>
+            </div>
+            <div>
+              <li>
+                <input placeholder="friend code" id="multi_mode_name" /><button
+                  id="multi_mode_btn"
+                  class="small"
+                >
+                  join
+                </button>
+              </li>
+            </div>
+          </ul>
+        </section>
+        <footer>
+          <p>
+            built with ♥ by
+            <a target="_blank" href="http://duthaho.github.io/">@duthaho</a>
+          </p>
+        </footer>
+      </div>
+      <div id="game_show" class="hidden">
+        <section id="main_section">
+          <header id="game_header">
+            <p id="game_header_info">number: <a>1</a> - timer: <a>00:00</a></p>
+            <p>
+              <button class="small" id="game_leaderboard_btn">leaderboard</button>
+              <button class="small" id="game_play_btn">play</button>
+              <button class="small" id="game_sound_btn">sound</button>
+            </p>
+          </header>
+          <section id="boards_container">
+            <div id="my_board_container">
+              <header>
+                <h2>Your board</h2>
+              </header>
+              <div id="my_board_grid" class="grid"></div>
+            </div>
+            <div id="opponents_board_container">
+              <header>
+                <h2>Opponent board</h2>
+              </header>
+              <div id="opponents_board_grid" class="grid"></div>
+            </div>
+          </section>
+        </section>
+        <aside id="chat_container">
+          <header>
+            <p><i class="status connected"></i> online</p>
+          </header>
+          <div class="messages-container">
+            <ul id="message_list"></ul>
+          </div>
+          <div class="form-container">
+            <input id="message_input" placeholder="Enter your message" />
+          </div>
+        </aside>
+        <aside id="leaderboard_container">
+          <a href="javascript:void(0)" class="close-button">×</a>
+          <div id="leaderboard_items"></div>
+        </aside>
       </div>
     </div>
-    <div class="game-container">
-      <div class="grid-container"></div>
-    </div>
-
-    <hr />
-
-    <div class="fb-like" data-href="https://duthaho.github.io/5number/" data-width="" data-layout="standard"
-      data-action="like" data-size="small" data-share="true"></div>
-
-    <div class="fb-comments" data-href="https://duthaho.github.io/5number/" data-numposts="10"></div>
-  </div>
-  <div class="side-column">
-    <a href="javascript:void(0)" class="close-button">×</a>
-    <div class="leaderboard-container"></div>
-  </div>
-
-  <div id="fb-root" style="display: none;"></div>
-  <!-- <script async defer crossorigin="anonymous"
-    src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v11.0&appId=556230145821653&autoLogAppEvents=1"
-    nonce="dVBjJ3Rw"></script> -->
-  <script src="//cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-  <script src="hacker.js"></script>
-  <script src="main.js"></script>
-  <script>
-    !function() {
-      devtoolsDetector.addListener(function (isOpen, detail) {
-        if (isOpen) {
-          if ( document.body != null ) {
-            document.body.parentNode.removeChild( document.body );
-          }
-          if ( document.head != null ) {
-            document.head.parentNode.removeChild( document.head );
-          }
-        } else {
-          location.reload();
-        }
-      });
-
-      devtoolsDetector.launch();
-    }();
-  </script>
-</body>
-
+    <script src="//cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <script src="main.js"></script>
+  </body>
 </html>
