@@ -255,7 +255,8 @@ body {
   margin-bottom: 1.5em;
 }
 #main_container {
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  max-height: 100%;
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -785,7 +786,7 @@ button.small {
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-  padding: 0.75em;
+  padding: 12px;
   display: -webkit-box;
   display: -moz-box;
   display: -webkit-flex;
@@ -793,6 +794,7 @@ button.small {
   display: box;
   display: flex;
   border-left: 1px solid #cbcbd2;
+  height: calc(100% - 24px);
 }
 #game_show #chat_container .status {
   display: inline-block;
@@ -823,20 +825,26 @@ button.small {
   display: -ms-flexbox;
   display: box;
   display: flex;
-  padding: 1.5em 0;
+  flex-grow: 1;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 0;
+  overflow: hidden;
 }
 #game_show #chat_container .messages-container ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-y: scroll;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+  overflow: hidden;
+  overflow-y: auto;
+  min-height: 0;
+  display: grid;
 }
 #game_show #chat_container .messages-container ul li {
   padding: 0 0.75em;
