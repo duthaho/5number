@@ -1,3 +1,11 @@
+/*!
+ * Toastify js 1.12.0
+ * https://github.com/apvarun/toastify-js
+ * @license MIT licensed
+ *
+ * Copyright (C) 2018 Varun A P
+ */
+
 /**
  * @license
  * Copyright 2017 Google LLC

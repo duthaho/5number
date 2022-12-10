@@ -21,7 +21,6 @@ th {
   display: flex;
   position: fixed;
   overflow: hidden;
-  background: #faf8ef;
   z-index: 9999;
   top: 0;
   bottom: 0;
