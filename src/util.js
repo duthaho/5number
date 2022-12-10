@@ -195,7 +195,7 @@ export const getQuery = (key) => {
   return params[key];
 };
 
-export const emit = (event, detail) =>
+export const emitEvent = (event, detail) =>
   window.dispatchEvent(new CustomEvent(event, { detail }));
 
 export const isAutoClick = (e) => ![e.isTrusted, e.x, e.y].every(Boolean);

@@ -1,8 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import _range from "lodash/range";
 import _random from "lodash/random";
+import _throttle from "lodash/throttle";
 import hotkeys from "hotkeys-js";
 import { addListener, launch } from "devtools-detector";
+import "toastify-js/src/toastify.css";
 
 import { GAME_CONFIG, GAME_MODE } from "./const";
 import {
@@ -11,26 +13,36 @@ import {
   isReachLimit,
   loadInfo,
   onShowConfetti,
+  onShowNotify,
+  onToggleLoading,
   saveInfo,
 } from "./helper";
-import { onGenerateBoard, onInitBoard, onResetInfo } from "./board";
+import { onGenerateBoard, onResetInfo, onShowBoard } from "./board";
 import { onFirstMessage, onMessage } from "./bot";
 import {
   onInitSound,
+  onPauseBgSound,
   onPlayBgSound,
   onPlayWinSound,
   onToggleSound,
 } from "./sound";
-import { onLoadEmployees, onLoadScore, onUpdateScore } from "./fb";
+import {
+  onCheckCode,
+  onLoadEmployees,
+  onLoadScore,
+  onUpdateBoards,
+  onUpdateScore,
+} from "./fb";
 import { toTimerString } from "./util";
 
 let { userName, uid, mode: gameMode, eid, code } = loadInfo();
 let inGame = false;
 let hacker = false;
+let winner = "";
 let employees = {};
 let playCount = 0;
-
-const $loading = document.getElementById("pulse_wrapper");
+let ready = false;
+let notifyOpts = {};
 
 const $singleModeBtn = document.getElementById("single_mode_btn");
 const $singleModeName = document.getElementById("single_mode_name");
@@ -77,6 +89,9 @@ const onLoadGame = async () => {
   if (userName || eid) {
     $singleModeName.value = isInEvent("prd") ? eid : userName;
   }
+  if (code) {
+    $multiModeName.value = code;
+  }
 
   if (isInEvent("prd")) {
     employees = await onLoadEmployees();
@@ -84,7 +99,7 @@ const onLoadGame = async () => {
 
   onInitSound();
 
-  $loading.style.visibility = "hidden";
+  onToggleLoading(false);
 };
 
 const onSelectMode = (mode) => {
@@ -103,24 +118,27 @@ const onSelectMode = (mode) => {
     $opponentBoardContainer.classList.add("hidden");
   }
 
-  onInitBoard();
-
-  gameMode === GAME_MODE.MULTI && onInitBoard(true);
+  onShowBoard(code, mode);
 
   onLoadScore(onLoadLeaderboard);
 };
 
 const onPlay = () => {
   if (isReachLimit("prd", eid, playCount)) {
-    alert("You already reach limit play times for this event!");
+    onShowNotify("You already reach limit play times for this event!");
+    return;
+  }
+
+  if (gameMode === GAME_MODE.MULTI && !ready) {
+    onShowNotify("Waiting your friend join!");
+    return;
+  }
+
+  if (winner) {
     return;
   }
 
   onGenerateBoard(_range(1, GAME_CONFIG.BOARD_LENGTH + 1), true);
-
-  if (gameMode === GAME_MODE.MULTI) {
-    onGenerateBoard(_range(1, GAME_CONFIG.BOARD_LENGTH + 1), false, true);
-  }
 
   onPlayBgSound();
 
@@ -140,8 +158,6 @@ const onLoadLeaderboard = (items) => {
   }
   if (first < 0) first = 0;
   if (second > items.length) second = items.length;
-
-  if (!isEventAdmin("prd", eid)) return;
 
   $leaderboardItems.innerHTML = "";
   for (let i = first; i < second; i++) {
@@ -183,6 +199,85 @@ const onToggleScore = (forceShow = false) => {
   }
 };
 
+const onMultiplayerData = (data) => {
+  ready = data.host && data.guess;
+  if (ready) {
+    if (!notifyOpts.ready) {
+      onShowNotify("The game is ready!");
+      notifyOpts.ready = true;
+    }
+
+    const opponentEid = eid === data.host ? data.guess : data.host;
+    if (data[opponentEid]) {
+      onGenerateBoard(data[opponentEid].boards || [], false, true);
+    }
+  }
+  if (data.winner && !notifyOpts.winner) {
+    notifyOpts.winner = true;
+    winner = data.winner;
+    onShowNotify(`The winner is ${winner}`, { duration: -1 });
+  }
+};
+
+const onInput = (e) => {
+  e.preventDefault();
+  if (e.key === "Enter" || e.keyCode === 13) {
+    const message = e.target.value;
+    e.target.value = "";
+    if (message) {
+      $messageList.insertAdjacentHTML(
+        "beforeend",
+        `<li class="mine"><span>${message}</span></li>`
+      );
+      onMessage(message, $messageList);
+    }
+  }
+};
+
+const isValidName = () => {
+  userName = $singleModeName.value.trim();
+  if (isInEvent("prd")) {
+    eid = userName;
+    userName = employees[eid];
+  }
+  if (userName) {
+    if (!uid) uid = uuidv4();
+    if (!eid) eid = uid;
+    saveInfo({ userName, uid, eid });
+    return true;
+  }
+  onShowNotify("Please enter your name");
+};
+
+const isValidCode = async () => {
+  if (!isValidName()) return false;
+
+  code = $multiModeName.value.trim();
+
+  const {
+    valid,
+    code: gameCode,
+    message,
+  } = await onCheckCode(
+    code,
+    {
+      eid,
+      uid,
+      name: userName,
+      boards: [],
+    },
+    onMultiplayerData
+  );
+  if (valid) {
+    code = gameCode;
+    saveInfo({ code });
+  } else {
+    onShowNotify(message);
+  }
+
+  return valid;
+};
+
 const onGameWin = ({ detail }) => {
   playCount++;
   inGame = false;
@@ -202,39 +297,14 @@ const onGameWin = ({ detail }) => {
   onPlayWinSound();
   onShowConfetti();
 
-  isEventAdmin("prd", eid) && onToggleScore(true);
-};
+  onToggleScore(true);
 
-const onKeyDown = (e) => {
-  if (e.key === "Enter" || e.keyCode === 13) {
-    const message = e.target.value;
-    if (e.target.value) {
-      $messageList.insertAdjacentHTML(
-        "beforeend",
-        `<li class="mine"><span>${message}</span></li>`
-      );
-      e.target.value = "";
-      onMessage(message, $messageList);
-    }
+  if (gameMode === GAME_MODE.MULTI) {
+    onUpdateBoards(code, eid, winner ? {} : { winner: userName }, {
+      second: detail.second,
+      hacker,
+    });
   }
-};
-
-const isValidName = () => {
-  userName = $singleModeName.value.trim();
-  if (isInEvent("prd")) {
-    eid = userName;
-    userName = employees[eid];
-  }
-  if (userName) {
-    if (!uid) uid = uuidv4();
-    if (!eid) eid = uid;
-    saveInfo({ userName, uid, eid });
-    return true;
-  }
-};
-
-const isValidCode = () => {
-  return false;
 };
 
 const onDetectHacker = () => {
@@ -247,6 +317,12 @@ const onDetectHacker = () => {
   }
 };
 
+const onBoardGenerate = ({ detail }) => {
+  if (gameMode === GAME_MODE.MULTI) {
+    onUpdateBoards(code, eid, {}, detail);
+  }
+};
+
 window.onload = () => {
   if (hacker) return;
 
@@ -254,20 +330,27 @@ window.onload = () => {
 
   $singleModeBtn.onclick = (e) =>
     isValidName() && onSelectMode(GAME_MODE.SINGLE);
-  $multiModeBtn.onclick = (e) => isValidCode() && onSelectMode(GAME_MODE.MULTI);
+  $multiModeBtn.onclick = async (e) =>
+    (await isValidCode()) && onSelectMode(GAME_MODE.MULTI);
 
   $gamePlayBtn.onclick = (e) => onPlay();
-  $leaderboardBtn.onclick = (e) => isEventAdmin("prd", eid) && onToggleScore();
+  $leaderboardBtn.onclick = (e) => onToggleScore();
   $soundBtn.onclick = (e) => onToggleSound(inGame);
 
   const $closeBtn = document.querySelector(".close-button");
   $closeBtn.onclick = (e) => onToggleScore();
 
-  $messageInput.onkeydown = (e) => onKeyDown(e);
+  $messageInput.onkeyup = _throttle((e) => onInput(e), 500);
 
   window.addEventListener("board:onwin", onGameWin);
   window.addEventListener("board:onhacker", onDetectHacker);
+  window.addEventListener("board:generate", onBoardGenerate);
 
   document.addEventListener("keydown", () => false);
   document.addEventListener("contextmenu", (e) => e.preventDefault());
+};
+
+window.onbeforeunload = () => {
+  onPauseBgSound();
+  onCleanResources();
 };

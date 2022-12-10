@@ -1,9 +1,9 @@
 import _shuffle from "lodash/shuffle";
 
-import { GAME_CONFIG, GAME_LEVEL } from "./const";
-import { isHacker } from "./helper";
+import { GAME_CONFIG, GAME_LEVEL, GAME_MODE } from "./const";
+import { isHacker, onShowNotify } from "./helper";
 import { onPlayGameSound } from "./sound";
-import { emit, getRandomString, isAutoClick, toTimerString } from "./util";
+import { emitEvent, getRandomString, isAutoClick, toTimerString } from "./util";
 
 const $myBoard = document.getElementById("my_board_grid");
 const $opponentBoard = document.getElementById("opponents_board_grid");
@@ -20,6 +20,18 @@ let clickTimer = 0;
 const rowClass = ["r", "o", "w"].join("");
 const cellClass = ["c", "e", "l", "l"].join("");
 const fakeClass = getRandomString();
+
+export const onShowBoard = (code, mode) => {
+  onInitBoard();
+
+  if (mode === GAME_MODE.MULTI) {
+    onInitBoard(true);
+
+    onShowNotify(`Send code ${code} for your friend!`, {
+      duration: -1,
+    });
+  }
+};
 
 export const onInitBoard = (opponent = false) => {
   const $board = opponent ? $opponentBoard : $myBoard;
@@ -41,7 +53,7 @@ const onAddCell = ($row, number, opponent) => {
     $cell.onclick = (e) => {
       if (isHacker(cheatCount)) {
         clearInterval(timer);
-        emit("board:onhacker");
+        emitEvent("board:onhacker");
         return;
       }
       const now = new Date().getTime();
@@ -62,13 +74,13 @@ const onAddCell = ($row, number, opponent) => {
 
           if (currentNumber > GAME_CONFIG.BOARD_LENGTH) {
             clearInterval(timer);
-            emit("board:onwin", { second: currentTimer });
+            emitEvent("board:onwin", { second: currentTimer });
           } else {
             $headerInfo.innerHTML = `number: <a>${currentNumber}</a> - timer: <a>${toTimerString(
               currentTimer
             )}</a>`;
-            onRandomBoard(currentNumber - 1);
           }
+          onRandomBoard(currentNumber - 1);
         } else {
           cheatCount++;
         }
@@ -85,7 +97,7 @@ const onAddFakeCell = ($row, number) => {
   const $cell = document.createElement("canvas");
   $cell.onclick = (e) => {
     clearInterval(timer);
-    emit("board:onhacker");
+    emitEvent("board:onhacker");
   };
   $cell.className = `${cellClass} ${fakeClass} c-${
     number > 9 ? number : "0" + number
@@ -116,7 +128,10 @@ export const onGenerateBoard = (array, shuffle = false, opponent = false) => {
       ctx.clearRect(0, 0, $canvas.width, $canvas.height);
     }
   }
-  if (!opponent) boards = arrays;
+  if (!opponent) {
+    boards = arrays;
+    emitEvent("board:generate", { boards });
+  }
 };
 
 const onRandomBoard = (number) => {

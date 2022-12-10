@@ -6,7 +6,7 @@ export const GAME_MODE = {
 export const GAME_LEVEL = {
   EASY: 1,
   HARD: 2,
-}
+};
 
 export const GAME_CONFIG = {
   BOARD_LENGTH: 100,
@@ -14,6 +14,10 @@ export const GAME_CONFIG = {
   ADMIN: ["80277", "06192"],
   LIMIT: 2,
   CHEAT: 50,
+  CONFETTI: {
+    duration: 10 * 1000,
+    options: { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 },
+  },
 };
 
 export const COOKIES = {
